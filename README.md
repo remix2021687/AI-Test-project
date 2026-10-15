@@ -25,11 +25,15 @@ accuracy score until there are audited verification samples. The requested
 ## Project layout
 
 ```text
-backend/                 SEC collection, parsing, validation, metrics, API
+backend/
+  api/                   FastAPI application, routes, CSV loading, scaling
+  collection/            SEC client, seed reader, history lookup, CSV export
+  commands/              Collection command-line interface
+  domain/                Shared parsing, validation, and quality calculations
+  tests/                 Backend collector, API, and metrics tests
 data/processed/          investor export and optional audited sample
 data/seeds/              configured CIK list and input documentation
 frontend/                Vite + React + TypeScript dashboard
-backend/tests/           backend collector, API, and metrics tests
 ```
 
 The dashboard uses Tailwind CSS utility classes and is split by responsibility
@@ -66,7 +70,11 @@ Add CIKs to the seed file described in `data/seeds/README.md` before running a
 collection. With no configured CIKs the pipeline writes a header-only CSV,
 which is preferable to a fabricated demo dataset.
 The activity window defaults to 24 months and can be set to 12–24 months with
-`ACTIVE_MONTHS`.
+`ACTIVE_MONTHS`. Existing `backend.app:app`, `backend.collector` imports, and
+`python -m backend.pipeline` remain available as compatibility entry points;
+implementation is organized under `backend.api` and `backend.collection`.
+Shared parsing, validation, and metrics live under `backend.domain`; the CLI
+implementation lives under `backend.commands`.
 
 ### Frontend
 

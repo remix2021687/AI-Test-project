@@ -30,6 +30,24 @@ without a header is also accepted when CIKs occupy its first column.
 See [`data/seeds/README.md`](../data/seeds/README.md) for the exact seed schema,
 an example, and provenance guidance. No seed records are shipped.
 
+## Code organization
+
+- `api/application.py` configures the FastAPI application and CORS middleware.
+- `api/routes.py` defines the three read-only API endpoints.
+- `api/data.py` loads and validates investor and verification CSV files.
+- `api/scaling.py` calculates the configured scaling scenario.
+- `collection/client.py` handles SEC requests, rate limiting, and retries.
+- `collection/seeds.py` reads and normalizes CIK seed files.
+- `collection/history.py` resolves current and archived SEC submissions.
+- `collection/service.py` coordinates collection and active-filing validation.
+- `collection/export.py` writes the atomic investor CSV export.
+- `domain/parser.py`, `domain/validator.py`, and `domain/metrics.py` hold shared
+  parsing, validation, and reporting logic.
+- `commands/collect.py` provides the collection command-line interface.
+
+`backend.app:app`, `backend.collector`, and `python -m backend.pipeline` remain
+supported compatibility entry points.
+
 Before a request is made to SEC, set `SEC_USER_AGENT` to a truthful,
 descriptive application identity and a real contact address. The project does
 not invent or ship contact details. For example, provide your own value in
